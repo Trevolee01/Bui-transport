@@ -67,7 +67,6 @@ export default function Profile() {
           <h1 className="text-2xl font-bold text-white">My Profile</h1>
         </div>
 
-        {/* Tab Navigation */}
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex">
             {[
