@@ -6,7 +6,7 @@ export default function Layout({ children }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout, loading } = useAuth();
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -16,13 +16,13 @@ export default function Layout({ children }) {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-lg">
+    <div className="min-h-screen bg-primary-50">
+      <nav className="bg-primary-600 shadow-lg">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <div className="flex-shrink-0 flex items-center">
-                <span className="text-2xl font-bold text-primary-600">
+              <div className="flex items-center">
+                <span className="text-white text-2xl font-bold tracking-wider">
                   BUI TRANSPORT
                 </span>
               </div>
@@ -33,63 +33,60 @@ export default function Layout({ children }) {
                 <>
                   <Link
                     to="/dashboard"
-                    className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    className={`px-3 py-2 rounded-md text-base font-medium transition-all duration-200 ${
                       isActive("/dashboard")
-                        ? "text-primary-600 bg-primary-50"
-                        : "text-gray-700 hover:text-primary-600"
+                        ? "bg-white text-primary-600"
+                        : "text-primary-100 hover:text-white hover:bg-primary-500"
                     }`}
                   >
                     Dashboard
                   </Link>
                   <Link
                     to="/transport"
-                    className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    className={`px-3 py-2 rounded-md text-base font-medium transition-all duration-200 ${
                       isActive("/transport")
-                        ? "text-primary-600 bg-primary-50"
-                        : "text-gray-700 hover:text-primary-600"
+                        ? "bg-white text-primary-600"
+                        : "text-primary-100 hover:text-white hover:bg-primary-500"
                     }`}
                   >
                     Transport Options
                   </Link>
                   <Link
                     to="/bookings"
-                    className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    className={`px-3 py-2 rounded-md text-base font-medium transition-all duration-200 ${
                       isActive("/bookings")
-                        ? "text-primary-600 bg-primary-50"
-                        : "text-gray-700 hover:text-primary-600"
+                        ? "bg-white text-primary-600"
+                        : "text-primary-100 hover:text-white hover:bg-primary-500"
                     }`}
                   >
                     My Bookings
                   </Link>
                   <Link
                     to="/profile"
-                    className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    className={`px-3 py-2 rounded-md text-base font-medium transition-all duration-200 ${
                       isActive("/profile")
-                        ? "text-primary-600 bg-primary-50"
-                        : "text-gray-700 hover:text-primary-600"
+                        ? "bg-white text-primary-600"
+                        : "text-primary-100 hover:text-white hover:bg-primary-500"
                     }`}
                   >
                     Profile
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                    className="px-4 py-2 rounded-md text-base font-medium border-none cursor-pointer transition-all duration-200 bg-red-500 text-white hover:bg-red-600"
                   >
                     Logout
                   </button>
                 </>
               ) : (
-                <>
-                 
-                </>
+                <></>
               )}
             </div>
 
-          
             <div className="md:hidden flex items-center">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-gray-700 hover:text-primary-600 focus:outline-none focus:text-primary-600"
+                className="bg-transparent border-none cursor-pointer text-primary-100 p-1 hover:text-white transition-colors duration-200"
               >
                 <svg
                   className="h-6 w-6"
@@ -111,36 +108,36 @@ export default function Layout({ children }) {
           {/* Mobile Navigation */}
           {isMenuOpen && (
             <div className="md:hidden">
-              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              <div className="bg-primary-700 px-4 pt-2 pb-3 space-y-1">
                 {user ? (
                   <>
                     <Link
                       to="/dashboard"
-                      className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600"
+                      className="block px-3 py-2 text-base font-medium rounded-md text-primary-100 hover:text-white hover:bg-primary-600 transition-all duration-200"
                     >
                       Dashboard
                     </Link>
                     <Link
                       to="/transport"
-                      className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600"
+                      className="block px-3 py-2 text-base font-medium rounded-md text-primary-100 hover:text-white hover:bg-primary-600 transition-all duration-200"
                     >
                       Transport Options
                     </Link>
                     <Link
                       to="/bookings"
-                      className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600"
+                      className="block px-3 py-2 text-base font-medium rounded-md text-primary-100 hover:text-white hover:bg-primary-600 transition-all duration-200"
                     >
                       My Bookings
                     </Link>
                     <Link
                       to="/profile"
-                      className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600"
+                      className="block px-3 py-2 text-base font-medium rounded-md text-primary-100 hover:text-white hover:bg-primary-600 transition-all duration-200"
                     >
                       Profile
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-3 py-2 text-base font-medium text-red-600 hover:text-red-700"
+                      className="block w-full text-left px-3 py-2 text-base font-medium rounded-md border-none bg-transparent cursor-pointer text-red-300 hover:text-red-100 hover:bg-red-600 transition-all duration-200"
                     >
                       Logout
                     </button>
@@ -149,13 +146,13 @@ export default function Layout({ children }) {
                   <>
                     <Link
                       to="/transport"
-                      className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600"
+                      className="block px-3 py-2 text-base font-medium rounded-md text-primary-100 hover:text-white hover:bg-primary-600 transition-all duration-200"
                     >
                       Browse Transport
                     </Link>
                     <Link
                       to="/register"
-                      className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600"
+                      className="block px-3 py-2 text-base font-medium rounded-md text-primary-100 hover:text-white hover:bg-primary-600 transition-all duration-200"
                     >
                       Register
                     </Link>
@@ -168,7 +165,7 @@ export default function Layout({ children }) {
       </nav>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <main className="max-w-7xl mx-auto py-6 px-4">
         {children}
       </main>
     </div>

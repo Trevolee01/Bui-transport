@@ -34,27 +34,49 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (email, password) => {
-    const response = await api.post("/auth/login/", { email, password });
-    const { tokens, user: userData } = response.data;
+    console.log("AuthContext: Attempting login for:", email);
+    console.log("AuthContext: API base URL:", api.defaults.baseURL);
+    
+    try {
+      const response = await api.post("/auth/login/", { email, password });
+      console.log("AuthContext: Login response:", response.data);
+      const { tokens, user: userData } = response.data;
 
-    localStorage.setItem("accessToken", tokens.access);
-    localStorage.setItem("refreshToken", tokens.refresh);
-    setUser(userData);
+      localStorage.setItem("accessToken", tokens.access);
+      localStorage.setItem("refreshToken", tokens.refresh);
+      setUser(userData);
 
-    return response.data;
+      return response.data;
+    } catch (error) {
+      console.error("AuthContext: Login error:", error);
+      console.error("AuthContext: Error response:", error.response?.data);
+      console.error("AuthContext: Error status:", error.response?.status);
+      console.error("AuthContext: Error config:", error.config);
+      throw error;
+    }
   };
 
   const register = async (userData) => {
     console.log("AuthContext: Sending registration request with data:", userData);
-    const response = await api.post("/auth/register/", userData);
-    console.log("AuthContext: Registration response:", response.data);
-    const { tokens, user: newUser } = response.data;
+    console.log("AuthContext: API base URL:", api.defaults.baseURL);
+    
+    try {
+      const response = await api.post("/auth/register/", userData);
+      console.log("AuthContext: Registration response:", response.data);
+      const { tokens, user: newUser } = response.data;
 
-    localStorage.setItem("accessToken", tokens.access);
-    localStorage.setItem("refreshToken", tokens.refresh);
-    setUser(newUser);
+      localStorage.setItem("accessToken", tokens.access);
+      localStorage.setItem("refreshToken", tokens.refresh);
+      setUser(newUser);
 
-    return response.data;
+      return response.data;
+    } catch (error) {
+      console.error("AuthContext: Registration error:", error);
+      console.error("AuthContext: Error response:", error.response?.data);
+      console.error("AuthContext: Error status:", error.response?.status);
+      console.error("AuthContext: Error config:", error.config);
+      throw error;
+    }
   };
 
   const logout = () => {

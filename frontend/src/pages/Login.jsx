@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import LoadingSpinner from "../components/LoadingSpinner";
+import ApiTest from "../components/ApiTest";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ export default function Login() {
   const [dashboardChoice, setDashboardChoice] = useState("auto");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -43,6 +45,11 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
+  }
+
+  // Show API test component if in development and there's a specific query parameter
+  if (import.meta.env.DEV && new URLSearchParams(window.location.search).get('debug') === 'api') {
+    return <ApiTest />;
   }
 
   return (
@@ -79,7 +86,6 @@ export default function Login() {
               justifyContent: "center",
             }}
           >
-            
             <div
               style={{
                 color: "white",
@@ -102,7 +108,7 @@ export default function Login() {
                     lineHeight: "1",
                   }}
                 >
-                BUI
+                  BUI
                 </div>
                 <div
                   style={{
@@ -119,13 +125,11 @@ export default function Login() {
           </div>
         </div>
 
-        
         <div style={{ width: "100%", maxWidth: "384px" }}>
           <form
             style={{ display: "flex", flexDirection: "column", gap: "16px" }}
             onSubmit={handleSubmit}
           >
-            
             <div>
               <input
                 id="email"
@@ -153,12 +157,11 @@ export default function Login() {
               />
             </div>
 
-            
             <div className="relative">
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 required
                 className="w-full px-4 py-4 pr-12 rounded-md text-base transition-all duration-200 login-input"
@@ -179,34 +182,57 @@ export default function Login() {
                   e.target.style.outline = "none";
                 }}
               />
-              
-              <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                <svg
-                  className="h-5 w-5 cursor-pointer"
-                  style={{ color: "#64748b" }}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  onMouseEnter={(e) => (e.target.style.color = "#94a3b8")}
-                  onMouseLeave={(e) => (e.target.style.color = "#64748b")}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
+
+              <div
+                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  // Eye slash icon (password visible)
+                  <svg
+                    className="h-5 w-5"
+                    style={{ color: "#64748b" }}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    onMouseEnter={(e) => (e.target.style.color = "#94a3b8")}
+                    onMouseLeave={(e) => (e.target.style.color = "#64748b")}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
+                    />
+                  </svg>
+                ) : (
+                  // Eye icon (password hidden)
+                  <svg
+                    className="h-5 w-5"
+                    style={{ color: "#64748b" }}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    onMouseEnter={(e) => (e.target.style.color = "#94a3b8")}
+                    onMouseLeave={(e) => (e.target.style.color = "#64748b")}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                )}
               </div>
             </div>
 
-          
             <div className="relative">
               <select
                 id="dashboardChoice"
@@ -232,7 +258,7 @@ export default function Login() {
                   value="student"
                   style={{ backgroundColor: "#1e293b", color: "#cbd5e1" }}
                 >
-                  Student Dashboard
+                  Student
                 </option>
                 <option
                   value="transport_organizer"
@@ -376,4 +402,3 @@ export default function Login() {
     </>
   );
 }
-

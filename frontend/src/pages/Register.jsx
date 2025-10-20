@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import Alert from "../components/Alert";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function Register() {
@@ -19,6 +18,8 @@ export default function Register() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
   function update(key, value) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -104,224 +105,551 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="bg-white rounded-xl shadow-xl p-8 border border-blue-100">
-          <div className="text-center mb-8">
-            <div className="mx-auto h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center mb-4">
-              <svg
-                className="h-8 w-8 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+    <>
+      <style>
+        {`
+          .register-input::placeholder {
+            color: #64748b !important;
+            opacity: 1;
+          }
+          .register-input:focus::placeholder {
+            color: #94a3b8 !important;
+          }
+          .register-select option {
+            background-color: #1e293b !important;
+            color: #cbd5e1 !important;
+          }
+        `}
+      </style>
+      <div
+        className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8"
+        style={{
+          background: "linear-gradient(to bottom, #334155, #1e293b, #0f172a)",
+        }}
+      >
+        {/* Logo Space - Same as Login */}
+        <div style={{ marginBottom: "40px" }}>
+          <div
+            style={{
+              width: "160px",
+              height: "96px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                color: "white",
+                fontSize: "48px",
+                fontWeight: "900",
+                letterSpacing: "0.1em",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-                />
-              </svg>
+                <div
+                  style={{
+                    fontSize: "50px",
+                    fontWeight: "900",
+                    lineHeight: "1",
+                  }}
+                >
+                  BUI
+                </div>
+                <div
+                  style={{
+                    fontSize: "30px",
+                    fontWeight: "600",
+                    marginTop: "-8px",
+                    lineHeight: "1",
+                  }}
+                >
+                  Transport
+                </div>
+              </div>
             </div>
-            <h2 className="text-3xl font-bold text-blue-900">
+          </div>
+        </div>
+
+        <div style={{ width: "100%", maxWidth: "500px" }}>
+          {/* Header Text */}
+          <div style={{ textAlign: "center", marginBottom: "32px" }}>
+            <h2
+              style={{
+                fontSize: "36px",
+                fontWeight: "900",
+                color: "white",
+                marginBottom: "8px",
+              }}
+            >
               Join Our Platform
             </h2>
-            <p className="mt-2 text-sm text-blue-600">
+            <p
+              style={{
+                fontSize: "16px",
+                color: "#94a3b8",
+                marginBottom: "4px",
+              }}
+            >
               Create your transport account
             </p>
-            <p className="mt-1 text-xs text-gray-500">
-              Already have an account?{" "}
-              <Link
-                to="/"
-                className="font-medium text-blue-600 hover:text-blue-500 underline"
-              >
-                Sign in here
-              </Link>
-            </p>
+            <p
+              style={{
+                fontSize: "14px",
+                color: "#64748b",
+              }}
+            ></p>
           </div>
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+          <form
+            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+            onSubmit={handleSubmit}
+          >
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+            >
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "16px",
+                }}
+              >
                 <div>
-                  <label
-                    htmlFor="first_name"
-                    className="block text-sm font-medium text-blue-700"
-                  >
-                    First Name
-                  </label>
                   <input
                     id="first_name"
                     name="first_name"
                     type="text"
                     required
-                    className="mt-1 appearance-none relative block w-full px-4 py-3 border border-blue-200 placeholder-blue-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                    className="w-full px-4 py-4 rounded-md text-base transition-all duration-200 register-input"
+                    style={{
+                      backgroundColor: "rgba(30, 41, 59, 0.6)",
+                      border: "1px solid rgba(71, 85, 105, 0.3)",
+                      color: "#cbd5e1",
+                    }}
                     placeholder="First name"
                     value={form.first_name}
                     onChange={(e) => update("first_name", e.target.value)}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = "#64748b";
+                      e.target.style.outline = "1px solid #64748b";
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = "rgba(71, 85, 105, 0.3)";
+                      e.target.style.outline = "none";
+                    }}
                   />
                 </div>
                 <div>
-                  <label
-                    htmlFor="last_name"
-                    className="block text-sm font-medium text-blue-700"
-                  >
-                    Last Name
-                  </label>
                   <input
                     id="last_name"
                     name="last_name"
                     type="text"
                     required
-                    className="mt-1 appearance-none relative block w-full px-4 py-3 border border-blue-200 placeholder-blue-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                    className="w-full px-4 py-4 rounded-md text-base transition-all duration-200 register-input"
+                    style={{
+                      backgroundColor: "rgba(30, 41, 59, 0.6)",
+                      border: "1px solid rgba(71, 85, 105, 0.3)",
+                      color: "#cbd5e1",
+                    }}
                     placeholder="Last name"
                     value={form.last_name}
                     onChange={(e) => update("last_name", e.target.value)}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = "#64748b";
+                      e.target.style.outline = "1px solid #64748b";
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = "rgba(71, 85, 105, 0.3)";
+                      e.target.style.outline = "none";
+                    }}
                   />
                 </div>
               </div>
 
               <div>
-                <label
-                  htmlFor="username"
-                  className="block text-sm font-medium text-blue-700"
-                >
-                  Username
-                </label>
                 <input
                   id="username"
                   name="username"
                   type="text"
                   required
-                  className="mt-1 appearance-none relative block w-full px-4 py-3 border border-blue-200 placeholder-blue-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                  className="w-full px-4 py-4 rounded-md text-base transition-all duration-200 register-input"
+                  style={{
+                    backgroundColor: "rgba(30, 41, 59, 0.6)",
+                    border: "1px solid rgba(71, 85, 105, 0.3)",
+                    color: "#cbd5e1",
+                  }}
                   placeholder="Choose a username"
                   value={form.username}
                   onChange={(e) => update("username", e.target.value)}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "#64748b";
+                    e.target.style.outline = "1px solid #64748b";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(71, 85, 105, 0.3)";
+                    e.target.style.outline = "none";
+                  }}
                 />
               </div>
 
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-blue-700"
-                >
-                  Email Address
-                </label>
                 <input
                   id="email"
                   name="email"
                   type="email"
                   autoComplete="email"
                   required
-                  className="mt-1 appearance-none relative block w-full px-4 py-3 border border-blue-200 placeholder-blue-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                  className="w-full px-4 py-4 rounded-md text-base transition-all duration-200 register-input"
+                  style={{
+                    backgroundColor: "rgba(30, 41, 59, 0.6)",
+                    border: "1px solid rgba(71, 85, 105, 0.3)",
+                    color: "#cbd5e1",
+                  }}
                   placeholder="Enter your email"
                   value={form.email}
                   onChange={(e) => update("email", e.target.value)}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "#64748b";
+                    e.target.style.outline = "1px solid #64748b";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(71, 85, 105, 0.3)";
+                    e.target.style.outline = "none";
+                  }}
                 />
               </div>
 
               <div>
-                <label
-                  htmlFor="phone_number"
-                  className="block text-sm font-medium text-blue-700"
-                >
-                  Phone Number
-                </label>
                 <input
                   id="phone_number"
                   name="phone_number"
                   type="tel"
                   required
-                  className="mt-1 appearance-none relative block w-full px-4 py-3 border border-blue-200 placeholder-blue-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                  className="w-full px-4 py-4 rounded-md text-base transition-all duration-200 register-input"
+                  style={{
+                    backgroundColor: "rgba(30, 41, 59, 0.6)",
+                    border: "1px solid rgba(71, 85, 105, 0.3)",
+                    color: "#cbd5e1",
+                  }}
                   placeholder="Enter your phone number"
                   value={form.phone_number}
                   onChange={(e) => update("phone_number", e.target.value)}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "#64748b";
+                    e.target.style.outline = "1px solid #64748b";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(71, 85, 105, 0.3)";
+                    e.target.style.outline = "none";
+                  }}
                 />
               </div>
 
-              <div>
-                <label
-                  htmlFor="role"
-                  className="block text-sm font-medium text-blue-700"
-                >
-                  Account Type
-                </label>
+              <div className="relative">
                 <select
                   id="role"
                   name="role"
-                  className="mt-1 block w-full px-4 py-3 border border-blue-200 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                  className="w-full px-4 py-4 rounded-md text-base appearance-none cursor-pointer transition-all duration-200 register-select"
+                  style={{
+                    backgroundColor: "rgba(30, 41, 59, 0.6)",
+                    border: "1px solid rgba(71, 85, 105, 0.3)",
+                    color: "#cbd5e1",
+                  }}
                   value={form.role}
                   onChange={(e) => update("role", e.target.value)}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "#64748b";
+                    e.target.style.outline = "1px solid #64748b";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(71, 85, 105, 0.3)";
+                    e.target.style.outline = "none";
+                  }}
                 >
-                  <option value="student">Student</option>
-                  <option value="transport_organizer">
+                  <option
+                    value="student"
+                    style={{ backgroundColor: "#1e293b", color: "#cbd5e1" }}
+                  >
+                    Student
+                  </option>
+                  <option
+                    value="transport_organizer"
+                    style={{ backgroundColor: "#1e293b", color: "#cbd5e1" }}
+                  >
                     Transport Organizer
                   </option>
                 </select>
+
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "12px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <svg
+                    style={{ height: "16px", width: "16px", color: "#64748b" }}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
               </div>
 
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-blue-700"
-                >
-                  Password
-                </label>
+              <div className="relative">
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   autoComplete="new-password"
                   required
-                  className="mt-1 appearance-none relative block w-full px-4 py-3 border border-blue-200 placeholder-blue-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                  className="w-full px-4 py-4 pr-12 rounded-md text-base transition-all duration-200 register-input"
+                  style={{
+                    backgroundColor: "rgba(30, 41, 59, 0.6)",
+                    border: "1px solid rgba(71, 85, 105, 0.3)",
+                    color: "#cbd5e1",
+                  }}
                   placeholder="Create a password"
                   value={form.password}
                   onChange={(e) => update("password", e.target.value)}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "#64748b";
+                    e.target.style.outline = "1px solid #64748b";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(71, 85, 105, 0.3)";
+                    e.target.style.outline = "none";
+                  }}
                 />
+                <div
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <svg
+                      className="h-5 w-5"
+                      style={{ color: "#64748b" }}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      onMouseEnter={(e) => (e.target.style.color = "#94a3b8")}
+                      onMouseLeave={(e) => (e.target.style.color = "#64748b")}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      className="h-5 w-5"
+                      style={{ color: "#64748b" }}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      onMouseEnter={(e) => (e.target.style.color = "#94a3b8")}
+                      onMouseLeave={(e) => (e.target.style.color = "#64748b")}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                  )}
+                </div>
               </div>
 
-              <div>
-                <label
-                  htmlFor="password_confirm"
-                  className="block text-sm font-medium text-blue-700"
-                >
-                  Confirm Password
-                </label>
+              <div className="relative">
                 <input
                   id="password_confirm"
                   name="password_confirm"
-                  type="password"
+                  type={showPasswordConfirm ? "text" : "password"}
                   autoComplete="new-password"
                   required
-                  className="mt-1 appearance-none relative block w-full px-4 py-3 border border-blue-200 placeholder-blue-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+                  className="w-full px-4 py-4 pr-12 rounded-md text-base transition-all duration-200 register-input"
+                  style={{
+                    backgroundColor: "rgba(30, 41, 59, 0.6)",
+                    border: "1px solid rgba(71, 85, 105, 0.3)",
+                    color: "#cbd5e1",
+                  }}
                   placeholder="Confirm your password"
                   value={form.password_confirm}
                   onChange={(e) => update("password_confirm", e.target.value)}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "#64748b";
+                    e.target.style.outline = "1px solid #64748b";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(71, 85, 105, 0.3)";
+                    e.target.style.outline = "none";
+                  }}
                 />
+                <div
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                  onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                >
+                  {showPasswordConfirm ? (
+                    <svg
+                      className="h-5 w-5"
+                      style={{ color: "#64748b" }}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      onMouseEnter={(e) => (e.target.style.color = "#94a3b8")}
+                      onMouseLeave={(e) => (e.target.style.color = "#64748b")}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      className="h-5 w-5"
+                      style={{ color: "#64748b" }}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      onMouseEnter={(e) => (e.target.style.color = "#94a3b8")}
+                      onMouseLeave={(e) => (e.target.style.color = "#64748b")}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                  )}
+                </div>
               </div>
             </div>
 
             {error && (
-              <Alert
-                type="error"
-                message={error}
-                onClose={() => setError("")}
-              />
+              <div
+                style={{
+                  borderRadius: "6px",
+                  padding: "12px",
+                  backdropFilter: "blur(4px)",
+                  backgroundColor: "rgba(127, 29, 29, 0.3)",
+                  border: "1px solid rgba(185, 28, 28, 0.5)",
+                }}
+              >
+                <p
+                  style={{
+                    color: "#fca5a5",
+                    fontSize: "14px",
+                    textAlign: "center",
+                    margin: 0,
+                  }}
+                >
+                  {error}
+                </p>
+              </div>
             )}
 
-            <div>
+            <div style={{ paddingTop: "16px" }}>
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg hover:shadow-xl"
+                style={{
+                  width: "100%",
+                  padding: "16px",
+                  color: "white",
+                  fontWeight: "600",
+                  borderRadius: "6px",
+                  border: "none",
+                  fontSize: "18px",
+                  cursor: loading ? "not-allowed" : "pointer",
+                  opacity: loading ? 0.5 : 1,
+                  transition: "all 0.2s ease",
+                  boxShadow:
+                    "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+                  background: "linear-gradient(to right, #ea580c, #dc2626)",
+                }}
+                onMouseEnter={(e) => {
+                  if (!loading) {
+                    e.target.style.background =
+                      "linear-gradient(to right, #dc2626, #b91c1c)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!loading) {
+                    e.target.style.background =
+                      "linear-gradient(to right, #ea580c, #dc2626)";
+                  }
+                }}
               >
-                {loading ? <LoadingSpinner size="sm" /> : "Create Account"}
+                {loading ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <LoadingSpinner size="sm" />
+                    <span style={{ marginLeft: "8px" }}>
+                      Creating Account...
+                    </span>
+                  </div>
+                ) : (
+                  "Create Account"
+                )}
               </button>
             </div>
           </form>
         </div>
+        <div style={{ marginTop: "80px", textAlign: "center" }}>
+          Already have an account?{" "}
+          <Link
+            to="/"
+            style={{
+              color: "#94a3b8",
+              textDecoration: "none",
+              transition: "color 0.2s ease",
+            }}
+            onMouseEnter={(e) => (e.target.style.color = "blue")}
+            onMouseLeave={(e) => (e.target.style.color = "#94a3b8")}
+          >
+            Sign in here
+          </Link>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
-

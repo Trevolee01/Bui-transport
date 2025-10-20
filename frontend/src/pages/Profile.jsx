@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import api from '../apiClient';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Alert from '../components/Alert';
 
 export default function Profile() {
+  const { user: authUser } = useAuth();
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -23,7 +25,12 @@ export default function Profile() {
         api.get('/auth/user/'),
         api.get('/users/profile/')
       ]);
-      setUser(userRes.data);
+      // Use authUser email if available, otherwise use API response
+      const userData = { ...userRes.data };
+      if (authUser?.email) {
+        userData.email = authUser.email;
+      }
+      setUser(userData);
       setProfile(profileRes.data);
     } catch (err) {
       setError('Failed to load profile');
@@ -71,8 +78,7 @@ export default function Profile() {
           <nav className="-mb-px flex">
             {[
               { key: 'profile', label: 'Profile Information' },
-              { key: 'security', label: 'Security' },
-              { key: 'preferences', label: 'Preferences' }
+              { key: 'security', label: 'Security' }
             ].map(tab => (
               <button
                 key={tab.key}
@@ -135,7 +141,7 @@ export default function Profile() {
                   id="email"
                   type="email"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-                  value={user?.email || ''}
+                  value={authUser?.email || user?.email || ''}
                   disabled
                 />
                 <p className="mt-1 text-sm text-gray-500">Email cannot be changed</p>
@@ -316,46 +322,7 @@ export default function Profile() {
             </div>
           )}
 
-          {/* Preferences Tab */}
-          {activeTab === 'preferences' && (
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Notification Preferences</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center">
-                    <input
-                      id="email_notifications"
-                      type="checkbox"
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor="email_notifications" className="ml-2 block text-sm text-gray-900">
-                      Email notifications for booking updates
-                    </label>
-                  </div>
-                  <div className="flex items-center">
-                    <input
-                      id="sms_notifications"
-                      type="checkbox"
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor="sms_notifications" className="ml-2 block text-sm text-gray-900">
-                      SMS notifications for trip updates
-                    </label>
-                  </div>
-                  <div className="flex items-center">
-                    <input
-                      id="marketing_emails"
-                      type="checkbox"
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor="marketing_emails" className="ml-2 block text-sm text-gray-900">
-                      Marketing emails and promotions
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+
         </div>
       </div>
     </div>

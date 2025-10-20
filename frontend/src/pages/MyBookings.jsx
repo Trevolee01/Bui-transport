@@ -66,7 +66,7 @@ export default function MyBookings() {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900">My Bookings</h1>
           <Link
-            to="/"
+            to="/transport"
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
           >
             Book New Trip
@@ -102,7 +102,7 @@ export default function MyBookings() {
           <Alert type="error" message={error} onClose={() => setError('')} />
         )}
 
-        {/* Bookings List */}
+        
         {filteredBookings.length === 0 ? (
           <div className="text-center py-12">
             <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -112,16 +112,7 @@ export default function MyBookings() {
             <p className="mt-1 text-sm text-gray-500">
               {filter === 'all' ? 'You haven\'t made any bookings yet.' : `No ${filter} bookings found.`}
             </p>
-            {filter === 'all' && (
-              <div className="mt-6">
-                <Link
-                  to="/"
-                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
-                >
-                  Book Your First Trip
-                </Link>
-              </div>
-            )}
+
           </div>
         ) : (
           <div className="space-y-4">

@@ -49,8 +49,23 @@ export default function OrganizerDashboard() {
 
       {/* Welcome Section */}
       <div className="bg-white shadow rounded-lg p-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Transport Organizer Dashboard</h1>
-        <p className="text-gray-600">Manage your transport services and bookings</p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Transport Organizer Dashboard</h1>
+            <p className="text-gray-600">Manage your transport services and bookings</p>
+          </div>
+          <div>
+            <Link
+              to="/student-dashboard"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-primary-600 bg-primary-50 hover:bg-primary-100 transition-colors"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              Student View
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* Stats Cards */}

@@ -14,43 +14,60 @@ import OrganizerDashboard from './pages/OrganizerDashboard.jsx';
 export default function App() {
   return (
     <BrowserRouter>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/dashboard" element={
+      <Routes>
+        {/* Auth routes without layout */}
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        
+        {/* Protected routes with layout */}
+        <Route path="/dashboard" element={
+          <Layout>
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
-          } />
-          <Route path="/student-dashboard" element={
+          </Layout>
+        } />
+        <Route path="/student-dashboard" element={
+          <Layout>
             <ProtectedRoute>
               <StudentDashboard />
             </ProtectedRoute>
-          } />
-          <Route path="/organizer-dashboard" element={
+          </Layout>
+        } />
+        <Route path="/organizer-dashboard" element={
+          <Layout>
             <ProtectedRoute>
               <OrganizerDashboard />
             </ProtectedRoute>
-          } />
-          <Route path="/transport" element={<TransportOptions />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/book/:id" element={
+          </Layout>
+        } />
+        <Route path="/transport" element={
+          <Layout>
+            <TransportOptions />
+          </Layout>
+        } />
+        <Route path="/book/:id" element={
+          <Layout>
             <ProtectedRoute>
               <CreateBooking />
             </ProtectedRoute>
-          } />
-          <Route path="/bookings" element={
+          </Layout>
+        } />
+        <Route path="/bookings" element={
+          <Layout>
             <ProtectedRoute>
               <MyBookings />
             </ProtectedRoute>
-          } />
-          <Route path="/profile" element={
+          </Layout>
+        } />
+        <Route path="/profile" element={
+          <Layout>
             <ProtectedRoute>
               <Profile />
             </ProtectedRoute>
-          } />
-        </Routes>
-      </Layout>
+          </Layout>
+        } />
+      </Routes>
     </BrowserRouter>
   );
 }
